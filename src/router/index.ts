@@ -4,7 +4,7 @@ import JudgePara from '../views/JudgePara.vue';
 
 const routes = [
     {
-        path: '/',
+        path: '/Fundamental',
         name: 'Fundamental',
         component: Fundamental
     },

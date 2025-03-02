@@ -1,12 +1,28 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import { invoke } from "@tauri-apps/api/core";
+import { useRouter } from "vue-router";
+import { onMounted } from "vue";
 
-const greetMsg = ref("");
-async function greet() {
-  // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-  greetMsg.value = await invoke("greet", { name: name.value });
-}
+const router = useRouter();
+const isActive =(path: string) => {
+  return router.currentRoute.value.path === path;
+};
+// const greetMsg = ref("");
+// async function greet() {
+//   // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
+//   greetMsg.value = await invoke("greet", { name: name.value });
+// }
+// 导航函数
+onMounted(() => {
+  // 如果当前在根路径，导航到 fundamental
+  if (router.currentRoute.value.path === '/') {
+    router.push('/Fundamental');
+  }
+});
+const navigateTo = (path: string) => {
+  router.push(path);
+};
 </script>
 
 <template>
@@ -19,19 +35,28 @@ async function greet() {
 
       <h1 class="title">CVToolKit</h1>
 
-      <div class="col 1">
-        <img class="icon 1" src="./assets/pic.svg" alt="icon img" />
+      <div
+          class="col 1"
+          :class="{ 'active': isActive('/Fundamental') }"
+          @click="navigateTo('/Fundamental')"
+      >
+        <img class="icon" src="./assets/pic.svg" alt="icon img" />
         <div>基础图像处理</div>
       </div>
 
-      <div class="col 2">
-        <img class="icon 2" src="./assets/para.svg" alt="icon img" />
+      <div
+          class="col"
+          :class="{ 'active': isActive('/JudgePara') }"
+          @click="navigateTo('/JudgePara')"
+      >
+        <img class="icon" src="./assets/para.svg" alt="icon img" />
         <div>HSV实时调参</div>
       </div>
-
-
     </aside>
 
+    <div class="content-area">
+      <router-view />
+    </div>
 
   </main>
 </template>
@@ -94,16 +119,28 @@ async function greet() {
   display: flex;
   align-items: center;
   justify-content: center;
-
+  transition: background-color 1.2s;
   left: 0;
   width: 100%; /* 占据父容器的全部宽度 */
   border: none; /* 移除默认边框 */
   background-color: transparent ; /* 背景透明（或根据需要调整颜色）*/
   text-align: center;
-  margin: 15px 0;
+  //margin: 15px 0;
+  margin: 0;
+  padding: 7px 0;
   gap: 8px;
   font-size: inherit; /* 字体大小继承自父级元素 */
   cursor: pointer; /* 鼠标悬停时显示手型指针 */
+}
+.col.active {
+  background-color: #d5d2d2; /* 比普通悬停状态更深的颜色 */
+  font-weight: bold;
+  filter: drop-shadow(0 0 10px #c7c3c3);
+}
+.col:hover{
+  background-color: #e2dede;
+  filter: drop-shadow(0 0 20px #c7c3c3);
+
 }
 .logo {
   height: auto;
@@ -128,9 +165,5 @@ async function greet() {
 
   box-shadow: 2px 0 5px rgba(0,0,0,0.1); /* 添加轻微阴影效果 */
 }
-.col:hover{
-  background-color: #e2dede;
-  filter: drop-shadow(0 0 20px #c7c3c3);
 
-}
 </style>
