@@ -1,11 +1,11 @@
-use tauri::{Manager, State};
-use opencv::prelude::*;
+// use tauri::{Manager, State};
+// use opencv::prelude::*;
 use opencv::imgcodecs::*;
 use opencv::imgproc::*;
 use opencv::core::Vector;
 use opencv::core::Mat;
 use base64::{encode};
-use std::convert::TryInto;
+// use std::convert::TryInto;
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
 
 #[tauri::command]
@@ -14,7 +14,7 @@ fn greet(name: &str) -> String {
 }
 
 #[tauri::command]
-fn process_threshold(file_data: Vec<u8>) -> Result<String, String> {
+fn process_threshold(file_data: Vec<u8> , threshold_value: f64) -> Result<String, String> {
     // Decode the image data
     let mat = Mat::from_slice(&file_data).map_err(|e| e.to_string())?;
     let  image = imdecode(&mat, IMREAD_COLOR).map_err(|e| e.to_string())?;
@@ -25,7 +25,7 @@ fn process_threshold(file_data: Vec<u8>) -> Result<String, String> {
 
     // Apply thresholding to binarize the image
     let mut binary_image = Mat::default();
-    threshold(&gray_image, &mut binary_image, 128.0, 255.0, THRESH_BINARY).expect("Failed to apply threshold");
+    threshold(&gray_image, &mut binary_image, threshold_value, 255.0, THRESH_BINARY).expect("Failed to apply threshold");
 
     // Encode the processed image to base64
     let mut encoded_image = opencv::core::Vector::<u8>::new();
