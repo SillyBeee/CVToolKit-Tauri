@@ -55,7 +55,10 @@ const navigateTo = (path: string) => {
     </aside>
 
     <div class="content-area">
-      <router-view />
+      <keep-alive>
+        <router-view v-if="isActive('/Fundamental')" />
+      </keep-alive>
+      
     </div>
 
   </main>
@@ -125,7 +128,7 @@ const navigateTo = (path: string) => {
   border: none; /* 移除默认边框 */
   background-color: transparent ; /* 背景透明（或根据需要调整颜色）*/
   text-align: center;
-  //margin: 15px 0;
+  /* //margin: 15px 0; */
   margin: 0;
   padding: 7px 0;
   gap: 8px;

@@ -7,6 +7,7 @@ import type { UploadChangeParam, UploadFile } from 'ant-design-vue';
 
 
 const value1 = ref(127);
+const selectedProcessingMethod = ref('threshold');
 const fileList = ref<UploadFile[]>([]);
 const processedImage = ref<string | null>(null);
 
@@ -15,9 +16,9 @@ const handleChange = (info: UploadChangeParam) => {
     console.log(info.file, info.fileList);
   }
   if (info.file.status === 'done') {
-    message.success(`${info.file.name} file uploaded successfully`);
+    message.success(`${info.file.name} 文件上传成功.`);
   } else if (info.file.status === 'error') {
-    message.error(`${info.file.name} file upload failed.`);
+    message.error(`${info.file.name} 文件上传失败.`);
   }
 };
 
@@ -63,10 +64,41 @@ watch(value1, async (newValue) => {
   }
 });
 
+
+const handleProcessingChange = (value: string) => {
+  console.log(`选择的处理方法: ${value}`);
+  
+  // 根据不同的处理方法设置默认参数
+  if (value === 'threshold') {
+    value1.value = 127;
+  } else if (value === 'gaussian') {
+    value1.value = 5; // 高斯模糊的核大小
+  } else if (value === 'canny') {
+    value1.value = 100; // Canny的阈值
+  }
+  
+  // 如果已有图像，重新处理
+  // if (fileList.value.length > 0) {
+  //   processImage(value1.value);
+  // }
+};
 </script>
 
 <template>
-
+  <a-select
+    v-model:value="selectedProcessingMethod"
+    style="width: 200px"
+    class="processing-selector"
+    placeholder="选择处理方式"
+    @change="handleProcessingChange"
+  >
+    <a-select-option value="threshold">二值化阈值处理</a-select-option>
+    <a-select-option value="adaptive">自适应阈值</a-select-option>
+    <a-select-option value="gaussian">高斯模糊</a-select-option>
+    <a-select-option value="canny">Canny边缘检测</a-select-option>
+    <a-select-option value="sobel">Sobel边缘检测</a-select-option>
+  </a-select>
+  
   <a-slider class="slider threshold" 
   v-model:value="value1"
   :min="0"
@@ -82,7 +114,7 @@ watch(value1, async (newValue) => {
   >
     <a-button class="button">
       <upload-outlined></upload-outlined>
-      Click to Upload
+      点击上传文件
     </a-button>
   </a-upload>
   <img class="img" :src="processedImage"  v-if="processedImage" alt="processedImage" />
@@ -116,4 +148,15 @@ watch(value1, async (newValue) => {
   border-radius: 5px;
   cursor: grab;
 }
+
+.processing-selector {
+  position: fixed;
+  top: 3%;
+  left: 25%;
+  width: 200px;
+  height: 20px;
+  cursor: grab;
+}
+
+
 </style>

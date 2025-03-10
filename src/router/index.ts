@@ -6,7 +6,8 @@ const routes = [
     {
         path: '/Fundamental',
         name: 'Fundamental',
-        component: Fundamental
+        component: Fundamental ,
+        meta: { keepAlive: true}
     },
     {
         path: '/JudgePara',
