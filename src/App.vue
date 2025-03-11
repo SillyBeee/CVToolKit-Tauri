@@ -56,7 +56,7 @@ const navigateTo = (path: string) => {
 
     <div class="content-area">
       <keep-alive>
-        <router-view v-if="isActive('/Fundamental')" />
+        <router-view :key="$route.path" />
       </keep-alive>
       
     </div>

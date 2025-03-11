@@ -4,13 +4,15 @@ import { invoke } from "@tauri-apps/api/core";
 import { message } from 'ant-design-vue';
 import { UploadOutlined } from '@ant-design/icons-vue';
 import type { UploadChangeParam, UploadFile } from 'ant-design-vue';
+import { useRouter } from 'vue-router';
 
-
+const router = useRouter();
 const value1 = ref(127);
 const selectedProcessingMethod = ref('threshold');
 const fileList = ref<UploadFile[]>([]);
 const processedImage = ref<string | null>(null);
 
+//文件上传消息函数
 const handleChange = (info: UploadChangeParam) => {
   if (info.file.status !== 'uploading') {
     console.log(info.file, info.fileList);
@@ -22,6 +24,7 @@ const handleChange = (info: UploadChangeParam) => {
   }
 };
 
+//图像上传及调用后端函数
 const customRequest = async (options: any) => {
   const { file } = options;
 
@@ -47,6 +50,7 @@ const customRequest = async (options: any) => {
   }
 };
 
+//监视滑动条函数
 watch(value1, async (newValue) => {
   if (fileList.value.length > 0) {
     const file = fileList.value[0];
@@ -65,16 +69,24 @@ watch(value1, async (newValue) => {
 });
 
 
+//选择器处理函数
 const handleProcessingChange = (value: string) => {
   console.log(`选择的处理方法: ${value}`);
   
   // 根据不同的处理方法设置默认参数
   if (value === 'threshold') {
-    value1.value = 127;
+    selectedProcessingMethod.value = 'threshold';
+    router.push('/Fundamental');
+    message.success('跳转至二值化');
+  }
+  else if(value === 'gamma'){
+    selectedProcessingMethod.value = 'gamma';
+    router.push('/GammaCorrection');
+    message.success('跳转至伽马校正');
   } else if (value === 'gaussian') {
-    value1.value = 5; // 高斯模糊的核大小
+    selectedProcessingMethod.value = 'gaussian';
   } else if (value === 'canny') {
-    value1.value = 100; // Canny的阈值
+    selectedProcessingMethod.value = 'canny';
   }
   
   // 如果已有图像，重新处理
@@ -93,7 +105,7 @@ const handleProcessingChange = (value: string) => {
     @change="handleProcessingChange"
   >
     <a-select-option value="threshold">二值化阈值处理</a-select-option>
-    <a-select-option value="adaptive">自适应阈值</a-select-option>
+    <a-select-option value="gamma">伽马校正</a-select-option>
     <a-select-option value="gaussian">高斯模糊</a-select-option>
     <a-select-option value="canny">Canny边缘检测</a-select-option>
     <a-select-option value="sobel">Sobel边缘检测</a-select-option>
