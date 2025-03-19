@@ -121,6 +121,7 @@ const handleProcessingChange = (value: string) => {
       class="upload"
       v-model:file-list="fileList"
       name="file"
+      accept="image/*,.jpg,.jpeg,.png,.gif,.bmp,.webp" 
       :customRequest="customRequest"
       @change="handleChange"
   >
