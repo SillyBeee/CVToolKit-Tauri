@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Fundamental from '../views/Fundamental.vue';
 import JudgePara from '../views/JudgePara.vue';
 import GammaCorrection from '../views/GammaCorrection.vue';
+import About from '../views/About.vue';
 const routes = [
     {
         path: '/Fundamental',
@@ -18,6 +19,11 @@ const routes = [
         path: '/GammaCorrection',
         name: 'GammaCorrection',
         component: GammaCorrection
+    },
+    {
+        path: '/About',
+        name: 'About',
+        component: About
     }
 ];
 

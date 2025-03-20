@@ -10,7 +10,7 @@ const selectedProcessingMethod = ref('gamma');
 const router = useRouter();
 const fileList = ref<UploadFile[]>([]);
 const processedImage = ref<string | null>(null);
-const value_gamma = ref(127);
+const value_gamma = ref(0);
 //文件上传消息函数
 const handleChange = (info: UploadChangeParam) => {
     if (info.file.status !== 'uploading') {
@@ -30,7 +30,7 @@ watch(value_gamma, async (newValue) => {
         const uint8Array = new Uint8Array(arrayBuffer);
 
         try {
-            const base64Data = await invoke('process_threshold', { fileData: uint8Array, thresholdValue: newValue });
+            const base64Data = await invoke('process_gamma_correction', { fileData: uint8Array, gammaValue: newValue });
             const imageUrl = `data:image/png;base64,${base64Data}`;
             processedImage.value = imageUrl;
             // message.success(`文件处理成功，阈值: ${newValue}`);
@@ -52,7 +52,7 @@ const customRequest = async (options: any) => {
 
     try {
         // 调用 Tauri 后端的 process_file 命令
-        const base64Data = await invoke('process_threshold', { fileData: uint8Array, thresholdValue: value_gamma.value });
+        const base64Data = await invoke('process_gamma_correction', { fileData: uint8Array, gammaValue: value_gamma.value });
         // 构造图像的 data URL
         const imageUrl = `data:image/png;base64,${base64Data}`;
 
@@ -99,8 +99,8 @@ const handleProcessingChange = (value: string) => {
         <a-select-option value="sobel">Sobel边缘检测</a-select-option>
     </a-select>
     <!-- 滑动条 -->
-    <a-slider class="slider threshold" v-model:value="value_gamma" :min="0" :max="255"
-        :marks="{ 0: '0', 127: '127', 255: '255' }" />
+    <a-slider class="slider threshold" v-model:value="value_gamma" :min="0" :max="10"
+        :marks="{ 0: '0',5: '5', 10: '10' }" />
     <!-- 上传组件 -->
     <a-upload class="upload" v-model:file-list="fileList" name="file" :customRequest="customRequest"
         @change="handleChange">

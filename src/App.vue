@@ -45,12 +45,21 @@ const navigateTo = (path: string) => {
       </div>
 
       <div
-          class="col"
+          class="col 2"
           :class="{ 'active': isActive('/JudgePara') }"
           @click="navigateTo('/JudgePara')"
       >
         <img class="icon" src="./assets/para.svg" alt="icon img" />
         <div>HSV实时调参</div>
+      </div>
+
+      <div
+          class="col 3"
+          :class="{ 'active': isActive('/About') }"
+          @click="navigateTo('/About')"
+      >
+        <img class="icon" src="./assets/about.svg" alt="icon img" />
+        <div>关于作者</div>
       </div>
     </aside>
 
@@ -105,12 +114,11 @@ const navigateTo = (path: string) => {
 }
 .title {
   overflow: hidden;
-
   animation: siz 3s steps(60) forwards;
-
+  padding: 20px;
   width: 100%;
   height: 28px;
-  font-size: 2.3em;
+  font-size: 2.1em;
   font-weight: lighter;
 }
 .icon{
